@@ -1,0 +1,32 @@
+// calculate pow(x,n)%mod in O(lg n) time.
+
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#define ll long long
+
+ll power(ll a,ll b,ll mod)
+{
+    ll x=1,y=a;
+
+    while(b>0)
+    {
+        if(b%2)
+        {
+            x=(x*y)%mod;
+        }
+        y=(y*y)%mod;
+        b/=2;
+    }
+    return x;
+}
+
+
+int main()
+{
+    ll x,n,m;
+    cin>>x>>n>>m;
+    cout<<power(x,n,m);
+    return 0;
+}
