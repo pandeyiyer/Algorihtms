@@ -1,0 +1,38 @@
+/*
+    -> Calculate modular multiplicative inverse for a modulo, when mod is prime.
+    -> Using fermat theoreom, modinverse(val,mod)=pow(val,mod-2,mod)
+*/
+
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#define ll long long
+
+ll power(ll a,ll b,ll mod)
+{
+    ll x=1,y=a;
+    while(b>0)
+    {
+        if(b%2)
+        {
+            x=(x*y)%mod;
+        }
+        y=(y*y)%mod;
+        b/=2;
+    }
+    return x;
+}
+
+ll modinverse(ll num,ll mod)
+{
+    return power(num,mod-2,mod);
+}
+
+int main()
+{
+    ll num,mod;
+    cin>>num>>mod;
+    cout<<modinverse(num,mod);
+    return 0;
+}
