@@ -3,7 +3,7 @@ using namespace std;
 
 #define ll long long
 #define mod 1000000007   // mod -> A Big prime value
-#define p 27             // p -> greater than number of distinct charcaters
+#define p 1000003             // p -> greater than number of distinct charcaters
 #define MAXN 250005      // maximum no. of characters
 ll power[MAXN],hash1[MAXN],hash2[MAXN];
 string s1,s2;
