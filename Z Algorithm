@@ -20,7 +20,7 @@ void compute()
         {
             l=r=i;
             while(r<n&&s[r-l]==s[r]) r=r+1;
-            z[i]=r-l; l--;
+            z[i]=r-l; r--;
         }
         else
         {
