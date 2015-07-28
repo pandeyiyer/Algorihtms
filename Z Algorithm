@@ -1,0 +1,53 @@
+/*                                      Z ALGORITHM
+-> For a Given Sting S of length n, Z algorithm produces an array(Z) of length n.
+-> where Z[i] indicates the maximum length of substring starting from i, which is also prefix of S.
+*/
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#define ll long long
+string m,s;
+ll z[1000];
+
+void compute()
+{
+    ll l=0,r=0,i,k;
+    ll n=s.size();
+    for(i=1;i<n;i++)
+    {
+        if(i>r)
+        {
+            l=r=i;
+            while(r<n&&s[r-l]==s[r]) r=r+1;
+            z[i]=r-l; l--;
+        }
+        else
+        {
+            k=i-l;
+            if(z[k]<r-i+1) z[i]=z[k];
+            else
+            {
+                l=i;
+                while(r<n&&s[r-l]==s[r]) r=r+1;
+                z[i]=r-l;
+                r--;
+            }
+        }
+    }
+}
+
+
+int main()
+{
+    cin>>s>>m;
+    s=m+"$"+s; // $-> this symbol is not present in both of strings.
+    cout<<s<<endl;
+    compute();
+    ll i,j;
+    for(i=m.size()+1,j=0;i<s.size();i++,j++)
+    {
+        if(z[i]==m.size()) cout<<"Pattern found at: "<<j<<endl;
+    }
+    return 0;
+}
