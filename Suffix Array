@@ -1,0 +1,86 @@
+/*
+
+    -> Suffix Array is the sorted array containing all suffixes of a given string.
+    -> this implementation is implemented in O(n*log n*log n)
+    -> P(k,i)-> it contains index of sorted substring of A.substr(i,2^k)
+    -> L[i]-> it stores three values(P(k-1,i),P(k-1,i+cnt),i)
+*/
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#define MAXN 65536
+#define MAXLG 17
+
+struct entry
+{
+    int nr[2],p;
+}L[MAXN];
+
+int P[MAXLG][MAXN];
+string s;
+
+bool cmp(entry a,entry b)
+{
+    if(a.nr[0]==b.nr[0])
+    {
+        if(a.nr[1]<b.nr[1]) return true;
+        else return false;
+    }
+    else
+    {
+        if(a.nr[0]<b.nr[0]) return true;
+        else return false;
+    }
+}
+
+int main()
+{
+    cin>>s;
+
+    int i,n,cnt,stp;
+
+    n=s.size();
+
+    for(i=0;i<n;i++)
+    {
+        P[0][i]=s[i]-'a'; // because s.substr(i,2^0) has sorted index equal to its positon
+    }
+
+    for(stp=1,cnt=1;cnt<n;stp++,cnt*=2)
+    {
+        for(i=0;i<n;i++)
+        {
+            L[i].nr[0]=P[stp-1][i];
+            if(i+cnt<n)                     // L[i].nr[1] initialisation
+            {
+                L[i].nr[1]=P[stp-1][i+cnt];
+            }
+            else
+            {
+                L[i].nr[1]=-1;
+            }
+            L[i].p=i;
+        }
+
+        sort(L,L+n,cmp);
+
+        for(i=0;i<n;i++)
+        {
+            if(i>0&&L[i].nr[0]==L[i-1].nr[0]&&L[i].nr[1]==L[i-1].nr[1])
+            {
+                P[stp][L[i].p]=P[stp][L[i-1].p];
+            }
+            else P[stp][L[i].p]=i;
+        }
+
+    }
+
+    cout<<"Sorted suffix indexes are: ";
+    for(i=0;i<n;i++)
+    {
+        cout<<P[stp-1][i]<<" ";
+    }
+
+    return 0;
+}
