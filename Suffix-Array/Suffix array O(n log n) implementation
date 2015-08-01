@@ -1,0 +1,108 @@
+/*
+
+    -> It is the suffix array O(n log n) Construction.
+    -> It also builds LCP table in O(n) Construction.
+
+*/
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#define ll long long
+#define MAXN 100000
+
+string s;
+ll ra[MAXN],sa[MAXN],tsa[MAXN],tra[MAXN],c[MAXN],n;
+
+void countingsort(ll k)
+{
+	ll sum=0,maxi=max((long long)300,n);
+
+	memset(c,0,sizeof(c));
+
+	for(ll i=0;i<n;i++)
+	{
+		if(sa[i]+k<n)
+        {
+            c[ra[sa[i]+k]]++;
+        }
+        else
+        {
+            c[0]++;
+        }
+	}
+
+	for(ll i=0;i<maxi;i++)
+	{
+		ll t=c[i];
+		c[i]=sum;
+		sum+=t;
+	}
+	for(ll i=0;i<n;i++)
+	{
+		if(sa[i]+k<n)
+		{
+		    tsa[c[ra[sa[i]+k]]++]=sa[i];
+		}
+		else
+        {
+            tsa[c[0]++]=sa[i];
+        }
+	}
+
+	for(ll i=0;i<n;i++)
+	{
+		sa[i]=tsa[i];
+	}
+}
+
+void constructsa()
+{
+    for(ll i=0;i<n;i++)
+    {
+        ra[i]=s[i];     // ra[i] stores ascii value of s[i] and it is same as L[i].nr[0] of O(n*log n*log n) implementation.
+        sa[i]=i;        // sa[i] stores the position of ith suffix and it is same as L[i].p
+    }
+
+    for(ll k=1;k<n;k*=2)    // k runs O(log n) time
+    {
+        countingsort(k);    // here to sort the suffixes w.r.t first k characters we use radix sort(which is here composed of two calls of countingsort).
+        countingsort(0);    // It is same as sorting L using cmp because we call first countingsort on k then 0.
+
+        tra[sa[0]]=0;       // sa[0] -> it stores the suffix position which comes first
+        ll r=0;
+        for(ll i=1;i<n;i++)
+        {
+            if(ra[sa[i]]==ra[sa[i-1]] && ra[sa[i]+k]==ra[sa[i-1]+k])
+            {
+                tra[sa[i]]=r;
+            }
+            else
+            {
+                tra[sa[i]]=++r;
+            }
+        }
+
+        for(ll i=0;i<n;i++) ra[i]=tra[i]; // ra[i] stores the pos of ith suffix after k matches
+    }
+}
+
+
+int main()
+{
+    int t;
+    cin>>t;
+    while(t--)
+    {
+        cin>>s;
+        n=s.size();
+        constructsa();
+
+        for(ll i=0;i<n;i++)
+        {
+            cout<<ra[i]<<"   "<<sa[i]<<"   "<<s.substr(sa[i],n-sa[i])<<endl; // ra stores pos of ith suffix, while sa stores the indexes in sorted form
+        }
+
+    }
+    return 0;
+}
