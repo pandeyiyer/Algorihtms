@@ -1,0 +1,108 @@
+
+// O(n*log n*log n) approach
+// P[stp-1][i] stores the rank
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#define ll long long
+#define MAXN 100005
+#define MAXLG 20
+#define mod 1000000009
+
+struct node
+{
+    ll nr[2],p;
+}L[MAXN];
+
+ll P[MAXLG][MAXN],s[MAXN],lcp[MAXN],n,stp,ra[MAXN],sa[MAXN];
+
+bool comp(node a,node b)
+{
+    if(a.nr[0]==b.nr[0])
+    {
+        if(a.nr[1]<b.nr[1]) return true;
+        else return false;
+    }
+    else
+    {
+        if(a.nr[0]<b.nr[0]) return true;
+        else return false;
+    }
+}
+
+void constructsa()
+{
+    ll i,j,cnt;
+    for(i=0;i<n;i++) P[0][i]=s[i];
+
+    for(stp=1,cnt=1;cnt<n;stp++,cnt*=2)
+    {
+        for(i=0;i<n;i++)
+        {
+            L[i].nr[0]=P[stp-1][i];
+            if(i+cnt<n)
+            {
+                L[i].nr[1]=P[stp-1][i+cnt];
+            }
+            else
+            {
+                L[i].nr[1]=-1;
+            }
+            L[i].p=i;
+        }
+        sort(L,L+n,comp);
+
+        for(i=0;i<n;i++)
+        {
+            if(i>0 && L[i].nr[0]==L[i-1].nr[0] && L[i].nr[1]==L[i-1].nr[1])
+            {
+                P[stp][L[i].p]=P[stp][L[i-1].p];
+            }
+            else
+            {
+                P[stp][L[i].p]=i;
+            }
+        }
+    }
+}
+
+void constructlcp() // kasai O(n) Algorithm
+{
+    ll i,j,k;
+
+    lcp[n-1]=0;
+    for(i=0;i<n;i++) ra[i]=P[stp-1][i], sa[P[stp-1][i]]=i;  // P[stp-1][i] stores the rank
+
+    for(i=0,k=0;i<n;i++,k?k--:0)
+    {
+        if(ra[i]==n-1) {k=0; continue;}
+
+        j=sa[ra[i]+1];
+
+        while(i+k<n && j+k<n && s[i+k]==s[j+k]) k++;
+        lcp[ra[i]]=k;
+    }
+}
+
+int main()
+{
+    ll t;
+    scanf("%lld",&t);
+    while(t--)
+    {
+        ll i,j,cnt;
+        cin>>j;
+        ll arr[j+1];
+        for(i=0;i<j;i++) scanf("%lld",&arr[i]);
+        for(i=0;i<j-1;i++) s[i]=arr[i+1]-arr[i]+100;
+        n=j-1;
+        constructsa();
+        constructlcp();
+        cnt=0;
+        for(i=0;i<n-1;i++) cnt+=lcp[i];
+        //cout<<cnt<<endl;
+        printf("%lld\n",(((n*(n+1))/2)-cnt)%mod);
+    }
+    return 0;
+}
