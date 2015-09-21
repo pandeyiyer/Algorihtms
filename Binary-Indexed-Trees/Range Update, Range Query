@@ -1,0 +1,83 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define ll long long
+
+ll bit1[100005],bit2[100005],n,c,i,l,r,v;
+
+void update_bit1(ll idx,ll val)
+{
+    while(idx<=n)
+    {
+        bit1[idx]+=val;
+        idx+=(idx & -idx);
+    }
+}
+
+void update_bit2(ll idx,ll val)
+{
+    while(idx<=n)
+    {
+        bit2[idx]+=val;
+        idx+=(idx & -idx);
+    }
+}
+
+ll query_bit1(ll idx)
+{
+    ll sum=0;
+    while(idx>0)
+    {
+        sum+=bit1[idx];
+        idx-=(idx & -idx);
+    }
+    return sum;
+}
+
+ll query_bit2(ll idx)
+{
+    ll sum=0;
+    while(idx>0)
+    {
+        sum+=bit2[idx];
+        idx-=(idx & -idx);
+    }
+    return sum;
+}
+
+ll query(ll idx)
+{
+	return query_bit1(idx)*idx-query_bit2(idx);
+}
+
+int main()
+{
+    ll t;
+    scanf("%lld",&t);
+    while(t--)
+    {
+        memset(bit1,0,sizeof(bit1));
+        memset(bit2,0,sizeof(bit2));
+
+        scanf("%lld %lld",&n,&c);
+
+        while(c--)
+        {
+            scanf("%lld",&i);
+            if(i)
+            {
+                scanf("%lld %lld",&l,&r);
+                printf("%lld\n",query(r)-query(l-1));
+            }
+            else
+            {
+                scanf("%lld %lld %lld",&l,&r,&v);
+                update_bit1(l,v);
+                update_bit1(r+1,-v);
+                update_bit2(l,v*(l-1));
+                update_bit2(r+1,-v*r);
+            }
+        }
+    }
+    return 0;
+}
