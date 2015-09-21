@@ -1,0 +1,55 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+
+#define ll long long
+
+
+ll bit[10005],n,u,q,l,r,i,val;
+
+void update(ll idx,ll v)
+{
+    while(idx<=n)
+    {
+        bit[idx]+=v;
+        idx+= (idx & -idx);
+    }
+}
+
+ll query(ll idx)
+{
+    ll sum=0;
+    while(idx>0)
+    {
+        sum+=bit[idx];
+        idx-=(idx & -idx);
+    }
+    return sum;
+}
+
+int main()
+{
+    ll t;
+    scanf("%lld",&t);
+    while(t--)
+    {
+        memset(bit,0,sizeof(bit));
+        scanf("%lld %lld",&n,&u);
+        while(u--)
+        {
+            scanf("%lld %lld %lld",&l,&r,&val);
+            l++;
+            r++;
+            update(l,val);
+            update(r+1,-1*val);
+        }
+        scanf("%lld",&q);
+        while(q--)
+        {
+            scanf("%lld",&i);
+            i++;
+            printf("%lld\n",query(i));
+        }
+    }
+    return 0;
+}
