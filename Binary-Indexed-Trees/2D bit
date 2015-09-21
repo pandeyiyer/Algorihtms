@@ -1,0 +1,107 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+
+
+long int scan()
+{
+    long int n=0,flag=0;
+    char c=getchar_unlocked();
+    if(c=='-') flag=1;
+    while( c < '0' || c > '9' ) c=getchar_unlocked();
+    while( c >= '0' && c <= '9' )
+    n = (n<<3)+(n<<1) + c-'0', c=getchar_unlocked();
+    if(flag) return (-n);
+    else return n;
+}
+
+void print(long int a)
+{
+    char snum[12];
+    int i=0;
+    do
+    {
+       snum[i++]=a%10+48;
+       a=a/10;
+    }while(a!=0);
+    i=i-1;
+    while(i>=0)
+    putchar_unlocked(snum[i--]);
+}
+
+
+
+long int bit[1030][1030],n,l,r,p,q,v;
+
+void update(long int x,long int y,long int val)
+{
+    while(x<=n)
+    {
+        long int tmp=y;
+        while(tmp<=n)
+        {
+            bit[x][tmp]+=val;
+            tmp+=(tmp & -tmp);
+        }
+        x+=(x & -x);
+    }
+}
+
+long int query_build(long int x,long int y)
+{
+    long int sum=0;
+    while(x>0)
+    {
+        long int tmp=y;
+        while(tmp>0)
+        {
+            sum+=bit[x][tmp];
+            tmp-=(tmp & -tmp);
+        }
+        x-=(x & -x);
+    }
+    return sum;
+}
+
+long int query(long int a,long int b,long int c,long int d)
+{
+    return query_build(c,d)-query_build(a-1,d)-query_build(c,b-1)+query_build(a-1,b-1);
+}
+
+int main()
+{
+    long int t;
+    t=scan();
+    while(t--)
+    {
+       	n=scan();
+       	for(long int i=0;i<=n;i++) for(long int j=0;j<=n;j++) bit[i][j]=0;
+        char s[3];
+        scanf("%s",s);
+        while(s[0]!='E')
+        {
+            if(s[1]=='E')
+            {
+                l=scan();
+                r=scan();
+                v=scan();
+                l++,r++;
+                long int cnt=query(l,r,l,r);
+                update(l,r,v-cnt);
+            }
+            else
+            {
+                l=scan();
+                r=scan();
+                p=scan();
+                q=scan();
+                l++,r++,p++,q++;
+                print(query(l,r,p,q));
+                putchar_unlocked('\n');
+            }
+            scanf("%s",s);
+        }
+        putchar_unlocked('\n');
+    }
+    return 0;
+}
