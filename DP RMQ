@@ -1,0 +1,51 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define ll long long
+
+ll arr[100],m[100][10],n;    // 0-based indexing
+
+void precompute()
+{
+    int i,j;
+    for(i=0;i<n;i++) m[i][0]=1;
+
+    for(j=1;(1<<j)<=n;j++)
+    {
+        for(i=0;(i+(1<<j)-1)<n;i++)
+        {
+            if(arr[m[i][j-1]]<arr[m[i+(1<<(j-1))-1][j-1]])
+            {
+                m[i][j]=m[i][j-1];
+            }
+            else
+            {
+                m[i][j]=m[i+(1<<(j-1))-1][j-1];
+            }
+        }
+    }
+}
+
+ll rmq(ll i,ll j)
+{
+    ll k=log2(j-i+1);
+
+    if(arr[m[i][k]]<=arr[m[j-(1<<k)+1][k]]) return m[i][k];
+    else return m[j-(1<<k)+1][k];
+}
+
+int main()
+{
+    cin>>n;
+    ll i,j;
+    for(i=0;i<n;i++) cin>>arr[i];
+    precompute();
+    int q;
+    cin>>q;
+    while(q--)
+    {
+        cin>>i>>j;
+        cout<<rmq(i,j)<<endl;
+    }
+    return 0;
+}
