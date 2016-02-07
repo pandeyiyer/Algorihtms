@@ -18,7 +18,7 @@ void create_set(ll x){
 
 ll find_set(ll x){
 	if(parent[x] != x) parent[x] = find_set(parent[x]);
-	else return parent[x]; 
+	return parent[x]; 
 }
 
 void merge_sets(ll x,ll y){
