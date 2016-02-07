@@ -1,0 +1,74 @@
+// calculating execution time 
+
+#include <ctime>
+
+void main(){
+    
+   clock_t t; //create object;
+   t=clock(); //initialise the object.
+   
+   // here t will give us the no. of clock ticks executed by processor.
+
+  cout<<t<<endl; //no. of clock ticks
+
+  // to obtain time in seconds, we will divide clock ticks to no. of clock ticks per second to get actual time;
+
+ double actual_time= ((float)t)/CLOCKS_PER_SEC; // real time in seconds
+ 
+ cout<<actual_time<<endl;
+}
+
+
+// fast input
+
+#define ll long long
+
+ll scan()
+{
+    ll n=0;
+    char c=getchar_unlocked();
+    while( c < '0' || c > '9' ) c=getchar_unlocked();
+    while( c >= '0' && c <= '9' )
+    n = (n<<3)+(n<<1) + c-'0', c=getchar_unlocked();
+    return n;
+}
+
+// fast output
+
+void print(ll a)
+{
+    char snum[20];
+    int i=0;
+    do
+    {
+       snum[i++]=a%10+48;
+       a=a/10;
+    }while(a!=0);
+    i=i-1;
+    while(i>=0)
+    putchar_unlocked(snum[i--]);
+    putchar_unlocked('\n');
+}
+
+// input and output from a file
+
+#ifndef ONLINE_JUDGE
+    freopen("input.txt","r",stdin);
+    freopen("output.txt","w",stdout);
+#endif
+
+// integer to string conversion
+
+#include <sstream>
+
+string NumberToString ( long int Number )
+{
+    ostringstream ss;
+    ss << Number;
+    return ss.str();
+}
+
+// reading a line in scanf
+
+scanf(" %[^\n]s",s);
+
